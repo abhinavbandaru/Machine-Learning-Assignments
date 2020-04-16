@@ -115,7 +115,7 @@ def fscore(w,y):
 
 #WITHOUT REGULARZATION
 l=0
-print("1.WITHOUT REGULARZATION")
+print("1.WITHOUT REGULARIZATION")
 w,Error_history = L2gradientDescent(initial_w,x_train,y_train)
 print("The final w using Gradient Descent without Regularization:\n",w)
 print("Testing Accuracy:",testaccuracy(w,y_test)*100,"%")
@@ -124,11 +124,11 @@ plt.plot(Error_history)
 plt.xlabel("No of Iterations")
 plt.ylabel("$Error(\Theta)$")
 plt.title("Cost function using Gradient Descent without Regularization")
-#plt.show()
+plt.show()
 
 #L1 REGULARZATION
 l=1
-print("2.L1 REGULARZATION")
+print("2.L1 REGULARIZATION")
 w,Error_history = L1gradientDescent(initial_w,x_train,y_train)
 print("The final w using using Gradient Descent with L1 Regularization:\n",w)
 print("Testing Accuracy:",testaccuracy(w,y_test)*100,"%")
@@ -137,11 +137,11 @@ plt.plot(Error_history)
 plt.xlabel("No of Iterations")
 plt.ylabel("$Error(\Theta)$")
 plt.title("Cost function using Gradient Descent with L1 Regularization")
-#plt.show()
+plt.show()
 
 #L2 REGULARZATION
 l=1
-print("3.L2 REGULARZATION")
+print("3.L2 REGULARIZATION")
 w,Error_history = L2gradientDescent(initial_w,x_train,y_train)
 print("The final w using Gradient Descent with L2 Regularization:\n",w)
 print("Testing Accuracy:",testaccuracy(w,y_test)*100,"%")
@@ -150,6 +150,6 @@ plt.plot(Error_history)
 plt.xlabel("No of Iterations")
 plt.ylabel("$Error(\Theta)$")
 plt.title("Cost function using Gradient Descent with L2 Regularization")
-#plt.show()
+plt.show()
 
 
