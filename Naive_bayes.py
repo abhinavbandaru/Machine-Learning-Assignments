@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
 import numpy as np
 import pandas as pd
 import re
@@ -11,7 +5,6 @@ import nltk.tokenize
 import math
 from nltk.stem import PorterStemmer
 porter=PorterStemmer()
-#from sklearn.model_selection import train_test_split
 
 dataset=pd.read_csv('a1_d3.txt',sep="\n",header=None,delimiter='\t')
 for i in range(len(dataset)):
@@ -26,29 +19,14 @@ for i in range(len(dataset)):
         stem_sentence.append(" ")
     stem_sentence="".join(stem_sentence)
     dataset.iloc[i,0]=stem_sentence
-        
-'''
-X=dataset.iloc[:,0]
-y=dataset.iloc[:,1]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-from sklearn.feature_extraction.text import CountVectorizer
-matrix = CountVectorizer(max_features=1000)
-X_train = matrix.fit_transform(X_train).toarray()
-X_test=matrix.transform(X_test).toarray()
 
-from sklearn.naive_bayes import BernoulliNB
-classifier = BernoulliNB()
-classifier.fit(X_train, y_train)
-
-
-y_pred=classifier.predict(X_test)
-from sklearn.metrics import accuracy_score
-accuracy = accuracy_score(y_test, y_pred)
-'''
 import operator
 av_accuracy=0
 min_accuracy=1
 max_accuracy=0
+av_fscore=0
+min_fscore=1
+max_fscore=0
 for t in range(1,6):
     split_data=int(t*len(dataset)/5)
     split_data_begin=int((t-1)*len(dataset)/5)
@@ -127,14 +105,36 @@ for t in range(1,6):
             count+=1
     
     accuracy=count/len(X_test)
-    print(accuracy)
+    print(t,".Testing Accuracy:",accuracy*100,"%")
     av_accuracy=accuracy+av_accuracy
     if(accuracy<min_accuracy):
         min_accuracy=accuracy
     if(accuracy>max_accuracy):
         max_accuracy=accuracy
+    #Fscore
+    truepositive = 0
+    falsepositive = 0
+    falsenegative = 0
+    for i in range(len(X_test)):
+        if Y_pred[i]==1 and Y_test[i]==1:
+            truepositive = truepositive + 1
+        if Y_pred[i]==1 and Y_test[i]==0:
+            falsepositive = falsepositive + 1
+        if Y_pred[i]==0 and Y_test[i]==1:
+            falsenegative = falsenegative + 1
+    fscore = (2*truepositive)/(2*truepositive + falsepositive + falsenegative)
+    fscore = round(fscore,3)
+    print("   F-Score:",fscore*100,"%")
+    av_fscore = fscore + av_fscore
+    if(fscore<min_fscore):
+        min_fscore=fscore
+    if(accuracy>max_fscore):
+        max_fscore=fscore
 av_accuracy/=5
+av_fscore/=5
 diff=max(abs(max_accuracy-av_accuracy),abs(min_accuracy-av_accuracy))
-print(av_accuracy,"+-",round(diff,2))    
+difffscore=max(abs(max_fscore-av_fscore),abs(min_fscore-av_fscore))
+print("Average Testing Accuracy:",av_accuracy,"+-",round(diff,2))
+print("Average F-Score:",round(fscore,3),"+-",round(difffscore,2))    
     
                         
