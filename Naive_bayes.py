@@ -5,17 +5,21 @@ Created on Sun Apr 26 15:54:20 2020
 @author: LENOVO
 """
 
+#importing libraries
 import numpy as np
 import pandas as pd
 
+#Data Preprocessing
 dataset=pd.read_csv('a1_d3.txt',sep="\n",header=None,delimiter='\t')
 punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~+-1234567890'''
 for i in range(len(dataset)):
     X=dataset.iloc[i,0]
-    for var in X.lower():
+    X=X.lower()
+    for var in X:
         if var in punctuations:
             X=X.replace(var,'')
-    dataset.iloc[i,0] =X.lower()
+    X=" ".join(X.split())
+    dataset.iloc[i,0]=X
 
 av_accuracy=0
 min_accuracy=1
@@ -23,7 +27,8 @@ max_accuracy=0
 av_fscore=0
 min_fscore=1
 max_fscore=0
-for t in range(1,6):
+#5 fold crossValidation
+for t in range(1,6):          
     split_data=int(t*len(dataset)/5)
     split_data_begin=int((t-1)*len(dataset)/5)
     X_test=dataset.iloc[split_data_begin:split_data,:-1]
@@ -33,6 +38,7 @@ for t in range(1,6):
     Y_train=X_train.iloc[:,-1].values
     X_train=X_train.iloc[:,:-1]
     
+    #finding unique words in the training data
     uniqueword={}
     for sent in X_train.iloc[:,0]:
         word=sent.split()
@@ -44,7 +50,7 @@ for t in range(1,6):
 
     accuracy_max=0
     best_size=50
-    listofdict_var=list(uniqueword.items())
+    listofdict_var=list(uniqueword.items())[:]
     listofdicti=[i[0] for i in listofdict_var]
     X_t=[]
     for sent in X_train.iloc[:,0]:
@@ -55,6 +61,7 @@ for t in range(1,6):
                 vector[listofdicti.index(var)]=1
         X_t.append(vector)
     X_t=np.asarray(X_t)
+    #calculating the probability weather it is 0 or 1
     tot_yes=Y_train.sum()
     tot_no=len(Y_train)-tot_yes
     prob_arr_yes=np.zeros((tot_yes,len(listofdicti)))
@@ -69,8 +76,8 @@ for t in range(1,6):
             prob_arr_no[count_no]=X_t[i,:]
             count_no+=1
     
-    prob_vec_yes=((prob_arr_yes.sum(axis=0)+1)/(len(prob_arr_yes)))
-    prob_vec_no=((prob_arr_no.sum(axis=0)+1)/(len(prob_arr_no)))
+    prob_vec_yes=((prob_arr_yes.sum(axis=0)+1)/(len(prob_arr_yes)+2))
+    prob_vec_no=((prob_arr_no.sum(axis=0)+1)/(len(prob_arr_no)+2))
     
     prob_yes=(tot_yes/len(X_train))
     prob_no=(tot_no/len(X_train))
@@ -96,6 +103,7 @@ for t in range(1,6):
             Y_pred[i]=0
         i+=1
     
+    #calculating accuracy
     count=0;
     for i in range(len(X_test)):
         if Y_pred[i]==Y_test[i]:
@@ -133,4 +141,3 @@ diff=max(abs(max_accuracy-av_accuracy),abs(min_accuracy-av_accuracy))
 difffscore=max(abs(max_fscore-av_fscore),abs(min_fscore-av_fscore))
 print("Average Testing Accuracy:",av_accuracy,"+-",round(diff,2))
 print("Average F-Score:",round(fscore,3),"+-",round(difffscore,2))    
-                        
