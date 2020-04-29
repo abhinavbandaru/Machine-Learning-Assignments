@@ -29,10 +29,11 @@ def tanh_derivative(z):
     return 1.0 - np.tanh(z)**2
 
 #initializing weights for first layer
-w1 = np.zeros((11,9))
+w1 = np.random.randn(11,9)
+#gaussian sample points from normal distribution with mean=0,std dev=1
 
 #initializing weights for 2nd layer
-w2 = np.random.rand(9,1)
+w2 = np.random.randn(9,1)
 
 #learning rate
 global learnRate
@@ -105,5 +106,4 @@ plt.xlabel("No of Iterations")
 plt.ylabel("$Error(\Theta)$")
 plt.title("Cost function using 2 layered Neural Network")
 plt.show()
-
 
