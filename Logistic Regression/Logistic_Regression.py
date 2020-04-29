@@ -21,12 +21,8 @@ def sigmoid(z):
     return 1/ (1 + np.exp(-z))
 
 #initializing weights
-initial_w = np.zeros((5, 1))
-initial_w[0][0]=1
-initial_w[1][0]=0
-initial_w[2][0]=1
-initial_w[3][0]=0
-initial_w[4][0]=0
+initial_w = np.random.rand(5,1)
+#uniform sample points from uniform distribution over [0,1)
 
 #regularization parameter(l)
 global l
@@ -149,5 +145,4 @@ plt.xlabel("No of Iterations")
 plt.ylabel("$Error(\Theta)$")
 plt.title("Cost function using Gradient Descent with L2 Regularization")
 plt.show()
-
 
